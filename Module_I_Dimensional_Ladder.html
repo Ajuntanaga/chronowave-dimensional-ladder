@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The dimensional ladder — Module I | Chronowave Dynamics</title>
+<meta name="description" content="Module I of the Chronowave Dynamics Temporal Engine: From a line of time to a volume of time.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23070B14'/%3E%3Ctext x='32' y='44' font-family='serif' font-style='italic' font-size='34' fill='%23F5A83C' text-anchor='middle'%3Et%C2%B3%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,400;0,500;0,600;1,400&family=Space+Grotesk:wght@300;400;500;600&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<style>
+/* ============================================================
+   CHRONOWAVE DYNAMICS · TEMPORAL ENGINE
+   phosphor cyan → thermal amber duotone over a deep time-field
+   ============================================================ */
+:root{
+  --field:      #070B14;
+  --field-2:    #0B1120;
+  --field-3:    #101830;
+  --ivory:      #EDE8DC;
+  --ivory-dim:  rgba(237,232,220,.62);
+  --ivory-faint:rgba(237,232,220,.38);
+  --cyan:       #59D6C9;
+  --cyan-dim:   rgba(89,214,201,.35);
+  --amber:      #F5A83C;
+  --amber-dim:  rgba(245,168,60,.35);
+  --hairline:   rgba(237,232,220,.12);
+  --serif: "STIX Two Text", "Times New Roman", serif;
+  --grot:  "Space Grotesk", system-ui, sans-serif;
+  --mono:  "IBM Plex Mono", ui-monospace, monospace;
+  --max: 1140px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} }
+body{
+  background:var(--field); color:var(--ivory);
+  font-family:var(--serif); font-size:17px; line-height:1.72;
+  -webkit-font-smoothing:antialiased; overflow-x:hidden;
+}
+::selection{background:var(--amber);color:var(--field)}
+
+.wrap{max-width:var(--max);margin:0 auto;padding:0 clamp(18px,4.5vw,56px)}
+.eyebrow{
+  font-family:var(--grot);font-size:11px;letter-spacing:.34em;text-transform:uppercase;
+  color:var(--cyan);font-weight:500;display:flex;align-items:center;gap:14px;
+}
+.eyebrow::after{content:"";height:1px;flex:0 0 56px;background:linear-gradient(90deg,var(--cyan),transparent)}
+.eyebrow .rn{color:var(--amber);letter-spacing:.14em}
+h2{font-family:var(--serif);font-weight:500;font-size:clamp(29px,4vw,44px);line-height:1.16;letter-spacing:-.01em;margin:18px 0 8px}
+h2 em{font-style:italic;color:var(--amber)}
+h3{font-family:var(--serif);font-weight:600;font-size:20px;margin:0 0 6px}
+.lede{font-size:clamp(17px,1.6vw,20px);color:var(--ivory-dim);max-width:64ch}
+p{color:var(--ivory-dim);max-width:66ch;margin-bottom:1.1em}
+p strong{color:var(--ivory);font-weight:600}
+section{padding:clamp(68px,9vh,120px) 0;position:relative}
+section + section{border-top:1px solid var(--hairline)}
+
+/* equation panels */
+.eq-panel{background:linear-gradient(180deg,var(--field-2),rgba(13,21,36,.6));border:1px solid var(--hairline);border-left:none;border-radius:10px;padding:26px 26px 22px;margin:26px 0;overflow:visible;position:relative;counter-increment:eqn}
+.eq-panel::after{content:"eq " counter(eqn,decimal-leading-zero);position:absolute;right:14px;bottom:8px;font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:rgba(237,232,220,.28)}
+.eq-panel{box-shadow:inset 3px 0 0 0 var(--cyan)}
+.eq-panel[data-tag*="ASSUMED" i]{box-shadow:inset 3px 0 0 0 rgba(232,110,204,.85)}
+.eq-panel[data-tag*="ASSUMED" i]::before{color:rgba(232,110,204,.9)}
+.eq-panel[data-tag*="MEASURED" i],.eq-panel[data-tag*="FITTED" i]{box-shadow:inset 3px 0 0 0 var(--amber)}
+.eq-panel[data-tag*="MEASURED" i]::before,.eq-panel[data-tag*="FITTED" i]::before{color:var(--amber)}
+.eq-panel::before{content:attr(data-tag);position:absolute;top:-9px;left:20px;font-family:var(--grot);font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--cyan);background:var(--field);padding:0 10px;max-width:86%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.eq{color:var(--ivory);font-size:18px;text-align:center}
+.eq .katex{font-size:1.08em}
+.eq .katex-display{margin:.35em 0}
+.eq-scroll{overflow-x:auto;padding-bottom:6px;scrollbar-width:thin;scrollbar-color:rgba(89,214,201,.35) transparent}
+.eq-scroll::-webkit-scrollbar{height:5px}
+.eq-scroll::-webkit-scrollbar-thumb{background:rgba(89,214,201,.28);border-radius:3px}
+.eq-scroll::-webkit-scrollbar-track{background:transparent}
+.katex-fallback{font-family:var(--mono);font-size:13px;color:var(--cyan);white-space:pre-wrap}
+body{counter-reset:eqn}
+
+/* instrument chrome */
+.readout{font-family:var(--mono);font-size:12.5px;color:var(--cyan);letter-spacing:.03em}
+.readout b{color:var(--amber);font-weight:500}
+.panel{background:var(--field-2);border:1px solid var(--hairline);border-radius:12px;overflow:hidden}
+.panel-head{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:13px 20px;border-bottom:1px solid var(--hairline);font-family:var(--grot);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--ivory-faint);flex-wrap:wrap}
+canvas.viz{display:block;width:100%;height:auto;background:radial-gradient(120% 100% at 50% 0%, rgba(89,214,201,.05), transparent 60%), var(--field-2)}
+
+/* controls */
+.controls{display:flex;flex-wrap:wrap;gap:20px 30px;padding:18px 20px;border-top:1px solid var(--hairline)}
+/* The basis carries the 170px, not min-width: `.controls .ctrl{min-width:0}` further down (the phone
+   fix) cancels the minimum at every width, and with flex:1's zero basis a slider then never forces a
+   wrap. It shrank to 11px beside its neighbours instead (the Lorenz rho, sigma and beta sliders). */
+.ctrl{min-width:170px;flex:1 1 170px}
+.ctrl.narrow{min-width:130px;flex:0 1 180px}
+.ctrl label{display:flex;justify-content:space-between;gap:8px;font-family:var(--grot);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ivory-faint);margin-bottom:8px}
+.ctrl label output{font-family:var(--mono);color:var(--amber);letter-spacing:0;text-transform:none;white-space:nowrap}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:2px;border-radius:2px;background:linear-gradient(90deg,var(--cyan),var(--amber));outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:15px;height:15px;border-radius:50%;background:var(--ivory);border:2px solid var(--field);box-shadow:0 0 0 1.5px var(--cyan),0 0 12px rgba(89,214,201,.5)}
+input[type=range]::-moz-range-thumb{width:13px;height:13px;border-radius:50%;background:var(--ivory);border:2px solid var(--field);box-shadow:0 0 0 1.5px var(--cyan)}
+input[type=range]:focus-visible{outline:2px solid var(--amber);outline-offset:6px}
+.btn{font-family:var(--grot);font-size:12px;letter-spacing:.2em;text-transform:uppercase;font-weight:500;color:var(--field);background:var(--cyan);border:none;border-radius:100px;padding:11px 22px;cursor:pointer;transition:background .2s,transform .15s,box-shadow .2s}
+.btn:hover{background:var(--amber);box-shadow:0 0 24px rgba(245,168,60,.35)}
+.btn:active{transform:scale(.97)}
+.btn:focus-visible{outline:2px solid var(--ivory);outline-offset:3px}
+.btn.ghost{background:transparent;color:var(--cyan);border:1px solid var(--cyan-dim)}
+.btn.ghost:hover{color:var(--amber);border-color:var(--amber);box-shadow:none}
+.btn.live{background:var(--amber)}
+.btn.mini{padding:7px 14px;font-size:10.5px}
+.seg{display:inline-flex;border:1px solid var(--hairline);border-radius:100px;overflow:hidden;flex-wrap:wrap}
+.seg button{font-family:var(--grot);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;background:transparent;color:var(--ivory-faint);border:none;padding:9px 17px;cursor:pointer;transition:color .2s,background .2s}
+.seg button+button{border-left:1px solid var(--hairline)}
+.seg button[aria-pressed="true"]{background:var(--field-3);color:var(--amber)}
+.seg button:focus-visible{outline:2px solid var(--cyan);outline-offset:-3px}
+
+/* chips */
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font-family:var(--mono);font-size:11px;letter-spacing:.04em;color:var(--ivory-dim);background:transparent;border:1px solid var(--hairline);border-radius:100px;padding:6px 13px;cursor:pointer;transition:all .18s}
+.chip:hover{border-color:var(--cyan);color:var(--cyan)}
+.chip[aria-pressed="true"]{border-color:var(--amber);color:var(--amber);background:rgba(245,168,60,.08)}
+.chip:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+
+/* stat tiles */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:1px;background:var(--hairline);border-top:1px solid var(--hairline)}
+.stat{background:var(--field-2);padding:14px 18px}
+.stat .k{font-family:var(--grot);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--ivory-faint)}
+.stat .v{font-family:var(--mono);font-size:14.5px;color:var(--cyan);margin-top:4px;word-break:break-all}
+.stat .v.warm{color:var(--amber)}
+
+/* nav */
+nav#tf-nav{position:fixed;top:0;left:0;right:0;z-index:50;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);background:rgba(7,11,20,.75);border-bottom:1px solid var(--hairline)}
+nav#tf-nav .wrap{display:flex;align-items:center;justify-content:space-between;height:56px;gap:20px}
+.brand{font-family:var(--grot);font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--ivory);text-decoration:none;font-weight:600;white-space:nowrap}
+.brand span{color:var(--amber)}
+.navlinks{display:flex;gap:20px;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none}
+.navlinks::-webkit-scrollbar{display:none}
+.navlinks a{font-family:var(--grot);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ivory-faint);text-decoration:none;transition:color .2s;white-space:nowrap}
+.navlinks a:hover{color:var(--cyan)}
+.navlinks a .rn{color:var(--amber);margin-right:5px}
+@media(max-width:640px){.navlinks{display:none}}
+
+/* hero */
+header#hero{min-height:100svh;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden;padding:120px 0 80px}
+#heroCanvas{position:absolute;inset:0;width:100%;height:100%;z-index:0}
+#hero .wrap{position:relative;z-index:2}
+#hero::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,rgba(7,11,20,.25) 0%,rgba(7,11,20,0) 40%,rgba(7,11,20,.85) 92%)}
+.hero-kicker{font-family:var(--grot);font-size:12px;letter-spacing:.42em;text-transform:uppercase;color:var(--cyan);margin-bottom:26px}
+h1{font-family:var(--serif);font-weight:500;font-size:clamp(42px,8vw,104px);line-height:.98;letter-spacing:-.02em}
+h1 .t-sup{display:inline-block;color:var(--amber);font-style:italic}
+.hero-sub{margin-top:30px;font-size:clamp(17px,1.9vw,21px);color:var(--ivory-dim);max-width:58ch}
+.hero-sub i{color:var(--ivory)}
+.hero-meta{margin-top:40px;display:flex;gap:32px;flex-wrap:wrap;font-family:var(--mono);font-size:12px;color:var(--ivory-faint);letter-spacing:.05em}
+.hero-meta div b{display:block;color:var(--cyan);font-weight:400;margin-bottom:3px}
+.hero-cta{margin-top:42px;display:flex;gap:14px;flex-wrap:wrap}
+.scroll-hint{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);z-index:2;font-family:var(--grot);font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--ivory-faint);animation:hint 2.6s ease-in-out infinite}
+@keyframes hint{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,8px)}}
+@media(prefers-reduced-motion:reduce){.scroll-hint{animation:none}}
+
+/* dimensional ladder */
+.ladder-grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:40px;align-items:start;margin-top:32px}
+@media(max-width:900px){.ladder-grid{grid-template-columns:1fr}}
+.dim-list{display:flex;flex-direction:column;gap:2px}
+#frameBar{position:relative;margin-top:-58px;display:flex;align-items:center;justify-content:center;gap:18px;padding:10px 14px;background:linear-gradient(rgba(7,11,20,0),rgba(7,11,20,.88) 40%)}
+#frameBar .chips{margin:0;justify-content:center}
+.readout{font-variant-numeric:tabular-nums}
+#hlStepVals{display:inline-block;min-width:30ch;white-space:nowrap}
+#hlRung{display:inline-block;min-width:38ch;white-space:nowrap;text-align:right}
+.stepGrp{display:inline-flex;align-items:center;gap:5px;padding:3px 10px 3px 12px;border:1px solid var(--hairline);border-radius:999px;background:rgba(13,21,36,.8)}
+.stepGrp .readout{min-width:auto}
+#hlFineBand{display:none}
+#hlFineBand.on{display:flex;flex-wrap:wrap;align-items:flex-end}
+.hl-fine label{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.hl-fine output{min-width:82px;text-align:right;font-variant-numeric:tabular-nums}
+.hl-fine input[type=range]{width:100%}
+#ladderCanvas,#hlCanvas,#meshCanvas,#lorenzCanvas,#tvCanvas,#tfeCanvas{touch-action:none}
+@media (pointer:coarse){
+  .btn.mini{min-height:34px;min-width:34px;padding:6px 12px}
+  .stepGrp{padding:5px 12px}
+  input[type=number]{font-size:16px !important}
+  input[type=range]{min-height:30px}
+  select{min-height:32px;font-size:13px !important}
+}
+@media (max-width:720px){
+  .wrap{padding-left:14px;padding-right:14px}
+  .controls{gap:10px}
+  .ctrl.narrow{flex:1 1 100%}
+  #hlStepRow{gap:8px}
+  .readout{font-size:11px}
+  #meshAlg label{flex:1 1 100%}
+}
+
+/* ============ NARROW-VIEWPORT CONTAINMENT ============
+   Measured, not guessed: Chromium at 320 and 360 px reported
+   document.scrollWidth = 383, i.e. the whole page scrolled sideways, and the
+   deepest causes were a table row with min-content 369 px and a canvas with
+   min-content 367 px — both already sitting inside overflow-x:auto parents.
+   The reason the parents were not containing them is the default every grid
+   and flex item carries: min-width:auto, which resolves to MIN-CONTENT and
+   quietly overrides the scroll container. overflow-x:auto cannot shrink a box
+   whose minimum size is its content. So the fix is min-width:0 in the places
+   that scroll or are scrolled, and it belongs at every width, not behind a
+   media query — which is why this block sits outside one.
+   The canvas case is worse than a layout quirk: animate() writes
+   cv.width = cv.clientWidth every frame, so once the element has been wide,
+   its intrinsic width pins the minimum and it can never shrink back. That is a
+   one-way ratchet; max-width:100% breaks it. */
+.table-scroll, .eq-scroll{min-width:0}
+/* Any control row of buttons must be able to wrap. A non-wrapping flex row is
+   the general form of the fault measured in the lattice at 320 px, where three
+   buttons summed to 306 px in a 292 px box and pushed the whole document. */
+.controls .ctrl{min-width:0}
+.controls .ctrl > .seg, .controls .ctrl[style*="display:flex"]{flex-wrap:wrap}
+.seg{flex-wrap:wrap}
+canvas.viz{min-width:0;max-width:100%}
+.panel{min-width:0}
+.ref-grid > *, .split > *, .lattice-grid > *, .ladder-grid > *{min-width:0}
+.papers{grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr))}
+/* long mono readouts must be allowed to break rather than push the page */
+.readout, .tier-note code{overflow-wrap:anywhere}
+
+@media (max-width:520px){
+  /* the canon and open-ruling card grids: a 252px track in a 292px content box
+     fits, but below that the track keeps its minimum and overflows. min() lets
+     the single column collapse to the container instead. */
+  #compendium [style*="minmax(252px"]{grid-template-columns:1fr !important}
+  .papers{grid-template-columns:1fr}
+  .paper{padding:18px 16px 16px}
+  .paper .glyph{font-size:30px;right:10px;top:6px}
+  .paper h3{font-size:16px;padding-right:32px}
+  .eq-panel{padding:22px 14px 18px}
+  .eq-panel::before{max-width:calc(100% - 28px)}
+  .eq{font-size:15px}
+  table.data th, table.data td{padding-right:10px}
+  .panel-head{padding:12px 14px;gap:10px}
+  .wrap{padding-left:12px;padding-right:12px}
+  /* Inline flex:0 0 auto on a control row beats the .ctrl.narrow rule above and
+     sizes the row to max-content — which is how three buttons summed to 306 px
+     inside a 292 px box. Below 520 px a control row takes the full width and
+     wraps inside itself instead. */
+  .controls .ctrl[style*="flex:0 0 auto"]{flex:1 1 100% !important}
+  .btn.mini{font-size:10px;padding:5px 9px}
+  /* the nav keeps only the brand at this width, so it must not reserve a row
+     for links that are display:none */
+  #tf-nav .wrap{gap:8px;flex-wrap:nowrap}
+  #tf-nav #palBtn{font-size:9px;padding:3px 6px;letter-spacing:0}
+  #tf-nav .brand{font-size:12px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  /* Measured at 320-414 px: the canon cards' category labels render at 9.5 px
+     in uppercase with .16em tracking, which is past legible on a phone, and the
+     "→ XIII" module links are 38x12 px tap targets. Both are compendium-wide
+     patterns, so they are fixed by shape rather than one at a time. */
+  #compendium div[style*="font-size:9.5px"]{font-size:10.5px !important;letter-spacing:.12em !important}
+  #compendium a[href^="#"]{display:inline-block;padding:7px 8px;margin:-7px -2px;min-height:30px;line-height:16px}
+}
+/* Tap targets for the in-card module links at every width: an inline anchor of
+   38x12 px is a miss on any touch screen, not only a narrow one. */
+@media (pointer:coarse){
+  #compendium a[href^="#"], .tier-note a[href^="#"]{display:inline-block;padding:6px 8px;margin:-6px -2px;min-height:30px}
+}
+body.frame-tau .rn{color:var(--amber)}
+body.frame-beat .rn{color:#E7C46B}
+.chip.fr-tau[aria-pressed="true"]{border-color:var(--amber);color:var(--amber)}
+.chip.fr-beat[aria-pressed="true"]{border-color:#E7C46B;color:#E7C46B}
+.dim-item{text-align:left;background:transparent;border:none;border-left:2px solid var(--hairline);padding:17px 20px;cursor:pointer;transition:border-color .25s,background .25s}
+.dim-item .dt{font-family:var(--serif);font-style:italic;font-size:24px;color:var(--ivory-dim);transition:color .25s}
+.dim-item .dn{font-family:var(--grot);font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--ivory-faint);margin-top:2px}
+.dim-item .dd{font-family:var(--serif);font-size:14.5px;color:var(--ivory-faint);margin-top:8px;line-height:1.55;max-width:40ch}
+.dim-item[aria-pressed="true"]{border-left-color:var(--amber);background:linear-gradient(90deg,rgba(245,168,60,.07),transparent)}
+.dim-item[aria-pressed="true"] .dt{color:var(--amber)}
+.dim-item[aria-pressed="true"] .dn{color:var(--cyan)}
+.dim-item:focus-visible{outline:2px solid var(--cyan);outline-offset:-2px}
+
+.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:48px;align-items:center}
+@media(max-width:900px){.split{grid-template-columns:1fr}}
+.split.top{align-items:start}
+
+/* tables */
+table.data{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12px}
+table.data caption{caption-side:top;text-align:left;font-family:var(--grot);font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--ivory-faint);padding-bottom:12px}
+table.data th{font-weight:400;text-align:left;color:var(--cyan);letter-spacing:.05em;border-bottom:1px solid var(--hairline);padding:8px 12px 10px 0;white-space:nowrap}
+table.data td{color:var(--ivory-dim);padding:10px 12px 10px 0;border-bottom:1px solid rgba(237,232,220,.06);white-space:nowrap}
+table.data td.err{color:var(--amber)}
+table.data tr.final td{color:var(--ivory)}
+table.data tr.final td.err{color:var(--cyan);text-shadow:0 0 14px rgba(89,214,201,.5)}
+.table-scroll{overflow-x:auto}
+.ref-grid{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:40px;align-items:start;margin-top:28px}
+@media(max-width:960px){.ref-grid{grid-template-columns:1fr}}
+
+/* master eq */
+.tier-note{font-family:var(--grot);font-size:11.5px;letter-spacing:.08em;color:var(--ivory-faint);margin-top:10px;line-height:1.6}
+/* .ctrl label and .panel-head are upper-cased, which also turns gamma into Gamma, omega into Omega
+   and "t" into "T". Symbols and live readouts keep their case. */
+.sym, .panel-head .readout{text-transform:none}
+.cpl{white-space:nowrap;margin-right:14px}
+.cpl input{width:5.2em;background:#0d1524;color:var(--amber);border:1px solid var(--hairline);border-radius:6px;padding:3px 6px;font-family:var(--mono);font-size:12px}
+.cpl input:focus-visible{outline:2px solid var(--cyan);outline-offset:1px}
+.tier-note a{color:var(--cyan);text-underline-offset:2px}
+.tier-note a:hover{color:var(--amber)}
+/* Modules V, VI, VIII-XII, XIV, XVI: prose runs the full column instead of a 64-74ch strip on the
+   left, matching the standalone module extracts. Drop a section from this list to restore the strip. */
+:is(#scramble,#gnss,#hydrogen,#cosmos,#master,#horizons,#attractor,#volume,#observatory) :is(p,.lede,.gr-list){max-width:none}
+:is(#scramble,#gnss,#hydrogen,#cosmos,#master,#horizons,#attractor,#volume,#observatory) .panel + .tier-note{margin-top:18px}
+.gr-list{list-style:none;margin:22px 0 0;display:grid;gap:12px;max-width:64ch}
+.gr-list li{padding-left:26px;position:relative;color:var(--ivory-dim);font-size:16px}
+.gr-list li::before{content:"";position:absolute;left:0;top:.62em;width:12px;height:1.5px;background:linear-gradient(90deg,var(--cyan),var(--amber))}
+
+/* lattice */
+.lattice-grid{display:grid;grid-template-columns:minmax(0,6fr) minmax(0,6fr);gap:40px;align-items:start;margin-top:28px}
+@media(max-width:940px){.lattice-grid{grid-template-columns:1fr}}
+.scale-row{display:flex;gap:6px;flex-wrap:wrap;margin:18px 0 6px}
+.scale-cell{font-family:var(--mono);font-size:13px;color:var(--ivory-dim);border:1px solid var(--hairline);border-radius:8px;padding:9px 0;cursor:pointer;transition:all .18s;background:transparent;flex:1;min-width:44px;text-align:center}
+.scale-cell small{display:block;font-size:9px;color:var(--ivory-faint);letter-spacing:.08em;margin-top:2px}
+.scale-cell:hover{border-color:var(--cyan);color:var(--cyan)}
+.scale-cell.on{border-color:var(--amber);color:var(--amber);background:rgba(245,168,60,.09);box-shadow:0 0 18px rgba(245,168,60,.18)}
+.scale-cell:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+
+/* papers / compendium */
+.papers{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:34px}
+.paper{border:1px solid var(--hairline);border-radius:12px;padding:22px 22px 20px;background:linear-gradient(160deg,var(--field-2),transparent 70%);transition:border-color .25s,transform .25s;position:relative;overflow:hidden}
+.paper:hover{border-color:var(--cyan-dim);transform:translateY(-3px)}
+.paper .pn{font-family:var(--mono);font-size:11px;color:var(--amber);letter-spacing:.08em;margin-bottom:11px}
+.paper h3{font-size:17.5px;line-height:1.35;font-weight:600}
+.paper p{font-size:13.5px;line-height:1.6;color:var(--ivory-faint);margin:9px 0 0;max-width:none}
+.paper .glyph{position:absolute;right:14px;top:8px;font-family:var(--serif);font-style:italic;font-size:42px;color:rgba(89,214,201,.14)}
+
+.origin{border:1px solid var(--hairline);border-left:2px solid var(--amber);border-radius:0 12px 12px 0;padding:26px 30px;background:linear-gradient(90deg,rgba(245,168,60,.05),transparent 55%);margin-top:28px}
+.origin p{max-width:72ch}
+.origin .tagline{font-family:var(--mono);font-size:12px;color:var(--amber);letter-spacing:.06em;margin-bottom:13px}
+
+footer{border-top:1px solid var(--hairline);padding:54px 0 70px;font-family:var(--grot);font-size:12px;letter-spacing:.14em;color:var(--ivory-faint)}
+footer .wrap{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:baseline}
+footer .disc{font-family:var(--serif);font-size:13.5px;letter-spacing:0;max-width:52ch;line-height:1.6}
+
+/* scroll progress: time elapsed through the document */
+#progress{position:fixed;top:0;left:0;height:2px;width:0;z-index:60;background:linear-gradient(90deg,var(--cyan),var(--amber));box-shadow:0 0 10px rgba(245,168,60,.5);pointer-events:none}
+.navlinks a.active{color:var(--amber)}
+/* section reveal (only when JS is live) */
+body.js section > .wrap{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}
+body.js section > .wrap.vis{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){body.js section > .wrap{opacity:1;transform:none;transition:none}}
+
+/* command console */
+#palette{position:fixed;inset:0;z-index:80;display:none;background:rgba(4,6,12,.66);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+#palette.open{display:flex;align-items:flex-start;justify-content:center;padding:12vh 18px 0}
+.pal-box{width:min(560px,100%);background:var(--field-2);border:1px solid var(--cyan-dim);border-radius:14px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.6),0 0 40px rgba(89,214,201,.12)}
+.pal-box input{width:100%;background:transparent;border:none;outline:none;color:var(--ivory);font-family:var(--mono);font-size:15px;padding:16px 18px;border-bottom:1px solid var(--hairline)}
+.pal-box input::placeholder{color:var(--ivory-faint)}
+.pal-list{max-height:46vh;overflow-y:auto}
+.pal-item{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:11px 18px;cursor:pointer;font-family:var(--grot);font-size:13px;letter-spacing:.06em;color:var(--ivory-dim)}
+.pal-item .cat{font-family:var(--mono);font-size:10px;color:var(--ivory-faint);letter-spacing:.1em;text-transform:uppercase;white-space:nowrap}
+.pal-item.sel{background:var(--field-3);color:var(--amber)}
+.pal-item.sel .cat{color:var(--cyan)}
+.pal-foot{display:flex;gap:16px;padding:9px 18px;border-top:1px solid var(--hairline);font-family:var(--mono);font-size:10px;color:var(--ivory-faint)}
+kbd{font-family:var(--mono);font-size:10px;color:var(--cyan);border:1px solid var(--hairline);border-bottom-width:2px;border-radius:4px;padding:1px 6px;background:var(--field)}
+#palBtn{font-family:var(--mono);font-size:10.5px;color:var(--ivory-faint);background:transparent;border:1px solid var(--hairline);border-radius:6px;padding:4px 9px;cursor:pointer;white-space:nowrap;transition:color .2s,border-color .2s}
+#palBtn:hover{color:var(--cyan);border-color:var(--cyan-dim)}
+.key-hint{font-family:var(--mono);font-size:10.5px;color:var(--ivory-faint);letter-spacing:.04em;margin-top:10px}
+
+/* M3 source lattice */
+.m3-wrap{overflow-x:auto;padding:18px}
+.m3-grid{display:grid;grid-template-columns:repeat(13,minmax(52px,1fr));gap:0;min-width:720px;border:1px solid var(--hairline)}
+.m3-cell{
+  font-family:var(--mono);font-size:10.5px;color:var(--ivory-dim);
+  background:transparent;border:none;border-right:1px solid rgba(237,232,220,.09);border-bottom:1px solid rgba(237,232,220,.09);
+  padding:9px 3px;cursor:pointer;text-align:center;white-space:nowrap;transition:background .15s,color .15s;
+}
+.m3-cell:hover{color:var(--cyan);background:rgba(89,214,201,.06)}
+.m3-cell:focus-visible{outline:2px solid var(--cyan);outline-offset:-2px}
+.m3-cell.band{background:rgba(89,214,201,.045)}
+.m3-cell.bandL{border-left:2px double rgba(89,214,201,.55)}
+.m3-cell.bandR{border-right:2px double rgba(89,214,201,.55)}
+.m3-cell.a440{box-shadow:inset 0 0 0 1px rgba(245,168,60,.7)}
+.m3-cell.zeroSph{position:relative}
+.m3-cell.zeroSph::after{content:"";position:absolute;top:3px;right:3px;width:7px;height:7px;border-radius:50%;border:1px solid rgba(237,232,220,.55);background:transparent}
+.m3-cell:not(.zeroSph)::after{content:"";position:absolute;top:3px;right:3px;width:7px;height:7px;border-radius:50%;border:1px solid rgba(89,214,201,.30);background:radial-gradient(circle at 35% 35%, rgba(89,214,201,.45), rgba(89,214,201,.06))}
+.m3-cell{position:relative}
+.m3-key-zero,.m3-key-work{display:inline-block;width:8px;height:8px;border-radius:50%;vertical-align:baseline;margin:0 2px}
+.m3-key-zero{border:1px solid rgba(237,232,220,.55)}
+.m3-key-work{border:1px solid rgba(89,214,201,.35);background:radial-gradient(circle at 35% 35%, rgba(89,214,201,.5), rgba(89,214,201,.08))}
+.m3-cell.rule{border-right:3px double rgba(237,232,220,.35)}
+.m3-cell.tonic{color:var(--amber);font-weight:500}
+
+.m3-cell.lit{background:rgba(245,168,60,.16);color:var(--amber);box-shadow:inset 0 0 0 1px rgba(245,168,60,.4)}
+.m3-cell.sel{background:rgba(245,168,60,.3);color:var(--field);font-weight:600;text-shadow:none}
+.m3-readout{font-family:var(--mono);font-size:11.5px;color:var(--ivory-dim);padding:12px 20px;border-top:1px solid var(--hairline);display:flex;gap:18px;flex-wrap:wrap}
+.m3-readout b{color:var(--amber);font-weight:500}
+.m3-readout .q{color:var(--cyan)}
+.m3-grid.m3-num .m3-cell{font-size:9.3px;letter-spacing:0;padding:9px 2px}
+
+
+/* live equation lines — panels recalculate with the module's current parameters */
+.eq-live{border-top:1px dashed var(--hairline);margin-top:16px;padding-top:12px;color:var(--cyan);font-size:14px;overflow-x:auto}
+.eq-live .katex{font-size:.98em}
+.eq-live::before{content:"live";font-family:var(--grot);font-size:9px;letter-spacing:.26em;text-transform:uppercase;color:var(--amber);display:block;margin-bottom:7px}
+.txt-in{font-family:var(--mono);font-size:12.5px;color:var(--ivory);background:var(--field-3);border:1px solid var(--hairline);border-radius:8px;padding:8px 12px;width:100%;outline:none}
+.txt-in:focus{border-color:var(--cyan)}
+#helpBox{position:fixed;inset:0;z-index:80;display:none;background:rgba(4,6,12,.66);backdrop-filter:blur(6px)}
+#helpBox.open{display:flex;align-items:center;justify-content:center;padding:20px}
+.help-card{width:min(460px,100%);background:var(--field-2);border:1px solid var(--cyan-dim);border-radius:14px;padding:26px 30px}
+.help-card h3{font-family:var(--grot);font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--cyan);margin-bottom:16px}
+.help-card .row{display:flex;justify-content:space-between;gap:16px;font-family:var(--grot);font-size:13px;color:var(--ivory-dim);padding:7px 0;border-bottom:1px solid rgba(237,232,220,.06)}
+.icv-out{font-family:var(--mono);font-size:11.5px;color:var(--cyan);margin-top:10px;letter-spacing:.04em}
+.icv-out b{color:var(--amber);font-weight:500}
+@keyframes gradientBG{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+.hl-panel{position:relative}
+.hl-panel::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;z-index:2;
+  background:linear-gradient(-65deg,var(--cyan),#c850c8,var(--amber),var(--cyan));
+  background-size:400% 400%;animation:gradientBG 45s ease infinite}
+@media(prefers-reduced-motion:reduce){.hl-panel::before{animation:none}}
+.qreg{display:flex;flex-wrap:wrap;gap:6px;padding:12px 20px;border-top:1px solid var(--hairline)}
+.qreg .qk{font-family:var(--mono);font-size:10.5px;color:var(--ivory-dim);border:1px solid var(--hairline);border-radius:6px;padding:5px 9px;cursor:pointer;background:transparent;transition:all .15s}
+.qreg .qk small{color:var(--ivory-faint);margin-right:5px}
+.qreg .qk:hover{border-color:var(--cyan);color:var(--cyan)}
+.qreg .qk.hit{border-color:var(--amber);color:var(--amber);background:rgba(245,168,60,.12);box-shadow:0 0 14px rgba(245,168,60,.25)}
+.qreg .qk.zero{border-style:dashed;color:var(--ivory-faint)}
+.qreg .qk.zero.hit{border-color:var(--ivory);color:var(--ivory);background:rgba(237,232,220,.08)}
+</style>
+</head>
+<body>
+<div class="wrap" style="padding-top:28px">
+  <div style="font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ivory-faint)">Chronowave Dynamics &middot; Temporal Engine &middot; standalone module extract</div>
+</div>
+<section id="ladder">
+  <div class="wrap">
+    <div class="eyebrow"><span class="rn">I</span> The dimensional ladder</div>
+    <h2>From a line of time to a <em>volume</em> of time</h2>
+    <p class="lede">The framework promotes time from a single parameter to a three-fold structure.
+      Each power of <i>t</i> is read literally, as geometry: duration, temporal area, temporal volume.</p>
+    <div class="ladder-grid">
+      <div class="dim-list" role="group" aria-label="Choose a temporal dimension">
+        <button class="dim-item" data-dim="0" aria-pressed="true">
+          <div class="dt">T</div>
+          <div class="dn">First order &middot; t ; &tau;</div>
+          <div class="dd">Two clocks on one line: coordinate t and proper &tau;, and between them the first derived quantity &mdash; beat time B<sub>T</sub> = |&tau; &minus; t|.</div>
+        </button>
+        <button class="dim-item" data-dim="1" aria-pressed="false">
+          <div class="dt">T&#178;</div>
+          <div class="dn">Second order &middot; t&#178; ; &tau;&#178; ; t&middot;&tau; ; &tau;&middot;t</div>
+          <div class="dd">The temporal area carries four products: the pure squares t&#178; and &tau;&#178; on the axes, and the two mixed products t&middot;&tau; and &tau;&middot;t on either side of the diagonal &mdash; order matters.</div>
+        </button>
+        <button class="dim-item" data-dim="2" aria-pressed="false">
+          <div class="dt">T&#179;</div>
+          <div class="dn">Third order &middot; t&#179; ; &tau;&#179; ; t&#178;&middot;&tau; ; &tau;&#178;&middot;t</div>
+          <div class="dd">The volumetric mode: pure cubes t&#179; and &tau;&#179; at opposite corners, mixed volumes t&#178;&middot;&tau; and &tau;&#178;&middot;t between them. In hydrogen this phase carries &alpha;; in cosmology, dark energy.</div>
+        </button>
+      </div>
+      <div class="panel">
+        <div class="panel-head">
+          <span id="ladderTitle">Dimension &middot; coordinate time</span>
+          <span class="readout" id="ladderReadout">frame&nbsp;<b>t</b></span>
+        </div>
+        <canvas class="viz" id="ladderCanvas" height="420" aria-label="Animated visualization of the selected time dimension"></canvas>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div>
+      <div style="color:var(--ivory);letter-spacing:.3em;text-transform:uppercase;margin-bottom:10px">Chronowave <span style="color:var(--amber)">Dynamics</span></div>
+      <div>Framework &amp; papers &middot; Anthony M. Vargas &amp; Aethus Iqbal-Samir &middot; 2024&ndash;2026</div>
+    </div>
+    <div class="disc">Module I &middot; The dimensional ladder, extracted standalone from the full Temporal Engine compendium on 2026-11-14. A speculative theoretical framework, presented as proposed in the source papers and prototypes.</div>
+  </div>
+</footer>
+
+<script>
+(function(){
+"use strict";
+const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const CYAN = "#59D6C9", AMBER = "#F5A83C", IVORY = "#EDE8DC";
+function renderTex(el, tex, display){
+  if (window.katex){
+    try { katex.render(tex, el, {displayMode: display !== false, throwOnError: false}); return; }
+    catch(e){}
+  }
+  el.innerHTML = '<span class="katex-fallback"></span>';
+  el.firstChild.textContent = tex;
+}
+document.querySelectorAll(".eq[data-tex]").forEach(el => renderTex(el, el.dataset.tex));
+function fitCanvas(cv){
+  /* THE WHITEOUT BUG LIVED HERE: this used to read h from the height
+     attribute and then write cv.height = h*dpr \u2014 which IS that attribute.
+     On DPR-2 devices every call doubled the canvas (300\u2192600\u2192...) until it
+     passed the browser's max canvas area and rendering silently stopped:
+     the hyper-expansion and the blankouts were one bug. The design height
+     is now cached once and the resize is idempotent. */
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  if (!cv.dataset.designH) cv.dataset.designH = cv.getAttribute("height") || cv.clientHeight || 300;
+  const w = cv.clientWidth, h = +cv.dataset.designH;
+  const bw = Math.round(w * dpr), bh = Math.round(h * dpr);
+  if (cv.width !== bw) cv.width = bw;
+  if (cv.height !== bh) cv.height = bh;
+  cv.style.height = h + "px";
+  const ctx = cv.getContext("2d");
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  return {ctx, w, h};
+}
+const animators = [];
+function animate(cv, draw){
+  /* Resilient loop: an exception in one frame must never kill the rAF chain
+     (the old behavior \u2014 one NaN-radius throw blanked the module until
+     reload: the reported whiteouts). Errors are caught, context state is
+     restored so dirt can't leak into later frames, the first few are logged
+     (+ collected on window.__frameErrs for the harness). Zero-size boxes are
+     skipped rather than fitted; height changes now also trigger refit. */
+  let st = null, visible = true, t0 = performance.now(), errN = 0;
+  const io = new IntersectionObserver(en => { visible = en[0].isIntersecting; }, {rootMargin:"140px"});
+  io.observe(cv);
+  function frame(now){
+    if (visible && cv.clientWidth > 0){
+      /* designH is also watched: a view that asks for a new height from inside
+         its draw (VIII's legacy "Two clocks · Z" asks for 472/664) used to be
+         clipped at the old height, because clientHeight still matched st.h */
+      if (!st || st.w !== cv.clientWidth || st.h !== cv.clientHeight ||
+          (cv.dataset.designH && st.h !== +cv.dataset.designH)) st = fitCanvas(cv);
+      try{
+        st.ctx.save();
+        draw(st.ctx, st.w, st.h, reduced ? 0 : (now - t0) / 1000);
+        st.ctx.restore();
+      }catch(e2){
+        try{ st.ctx.restore(); }catch(e3){}
+        errN++;
+        (window.__frameErrs = window.__frameErrs || []).push(cv.id + ": " + e2.message);
+        if (errN <= 3) console.warn("frame error on #" + cv.id, e2);
+      }
+    }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+  animators.push(() => { st = null; });
+}
+window.addEventListener("resize", () => animators.forEach(f => f()));
+function grid(ctx, w, h, step){
+  ctx.strokeStyle = "rgba(89,214,201,.07)"; ctx.lineWidth = 1;
+  ctx.beginPath();
+  for (let x = 0; x <= w; x += step){ ctx.moveTo(x, 0); ctx.lineTo(x, h); }
+  for (let y = 0; y <= h; y += step){ ctx.moveTo(0, y); ctx.lineTo(w, y); }
+  ctx.stroke();
+}
+function duo(mix, a){ /* cyan->amber */
+  return `rgba(${89+(245-89)*mix|0},${214+(168-214)*mix|0},${201+(60-201)*mix|0},${a})`;
+}
+let dim = 0;
+const ladderTitle = document.getElementById("ladderTitle");
+const ladderReadout = document.getElementById("ladderReadout");
+let ladderRot = 0, ladDrag = null, ladHit0 = null, ladMoved = false;
+const ladderCvEl = document.getElementById("ladderCanvas");
+ladderCvEl.style.touchAction = "none";
+ladderCvEl.addEventListener("pointerdown", e => { if (dim > 0){ ladDrag = e.clientX; ladderCvEl.setPointerCapture(e.pointerId); } });
+ladderCvEl.addEventListener("pointermove", e => { if (ladDrag !== null){ if (Math.abs(e.clientX - ladDrag) > 3) ladMoved = true; ladderRot += (e.clientX - ladDrag)*0.008; ladDrag = e.clientX; } });
+["pointerup","pointercancel"].forEach(ev => ladderCvEl.addEventListener(ev, () => { ladDrag = null; }));
+ladderCvEl.addEventListener("click", e => {
+  if (dim !== 0 || !ladHit0) return;
+  const r = ladderCvEl.getBoundingClientRect();
+  const sx = (e.clientX - r.left) * (ladHit0.w / r.width);
+  const sy = (e.clientY - r.top) * (ladHit0.h / r.height);
+  const hit = (b) => b && sx >= b[0] && sx <= b[0]+b[2] && sy >= b[1] && sy <= b[1]+b[3];
+  if (hit(ladHit0.main)) FRAME.set(FRAME.combo === "t" ? "\u03C4" : "t");
+  else if (hit(ladHit0.t)) FRAME.set("t");
+  else if (hit(ladHit0.tau)) FRAME.set("\u03C4");
+});
+let ladHitN = null;
+ladderCvEl.addEventListener("click", e => {
+  if (ladMoved){ ladMoved = false; return; } /* a rotation is not a selection */
+  if (dim === 0 || !ladHitN) return;
+  const r = ladderCvEl.getBoundingClientRect();
+  const sx = (e.clientX - r.left) * (ladHitN.w / r.width);
+  const sy = (e.clientY - r.top) * (ladHitN.h / r.height);
+  for (const cb of FRAME.COMBOS[dim] || []){
+    const b = ladHitN[cb];
+    if (b && sx >= b[0] && sx <= b[0]+b[2] && sy >= b[1] && sy <= b[1]+b[3]){ FRAME.set(cb); return; }
+  }
+});
+const FRAME = {
+  order: 0, combo: "t",
+  COMBOS: [
+    ["t", "\u03C4"],
+    ["t\u00B2", "\u03C4\u00B2", "t\u00B7\u03C4", "\u03C4\u00B7t",
+     "B_T\u00B7t", "B_T\u00B7\u03C4", "B_T\u00B2"],
+    ["t\u00B3", "\u03C4\u00B3", "t\u00B2\u00B7\u03C4", "\u03C4\u00B2\u00B7t",
+     "B_T\u00B7t\u00B7\u03C4", "B_T\u00B7t\u00B2", "B_T\u00B7\u03C4\u00B2",
+     "B_T\u00B2\u00B7t", "B_T\u00B2\u00B7\u03C4"]
+  ],
+  kind(){ const c0 = this.combo; return (c0.indexOf("B_T") === 0 || c0.charAt(0) === "|") ? "beat" : (c0.charAt(0) === "\u03C4" ? "tau" : "t"); },
+  set(c){
+    this.combo = c;
+    (this.last = this.last || {})[this.order] = c; /* each order remembers its frame */
+    ladderReadout.innerHTML = "frame&nbsp;<b style=\"font-family:var(--mono);text-transform:none\">" + c.replace(/B_T/g, "B<sub>T</sub>") + "</b>";
+    document.body.classList.toggle("frame-tau", this.kind() === "tau");
+    document.body.classList.toggle("frame-beat", this.kind() === "beat");
+    document.dispatchEvent(new CustomEvent("framechange"));
+  }
+};
+FRAME.g = 1;
+function proj(x, y, z, w, h, rot){
+  const cs = Math.cos(rot), sn = Math.sin(rot);
+  const X = x*cs - z*sn, Z = x*sn + z*cs;
+  return [w/2 + X, h*0.56 - y*0.9 + Z*0.42];
+}
+animate(document.getElementById("ladderCanvas"), (ctx, w, h, t) => {
+  ctx.clearRect(0, 0, w, h);
+  grid(ctx, w, h, 34);
+  const FK = FRAME.kind(), FC = FRAME.combo;
+  const F_COL = FK === "beat" ? "rgba(231,196,107,1)" : FK === "tau" ? "rgba(245,168,60,1)" : "rgba(89,214,201,1)";
+  const rot = t*0.11 + ladderRot; /* half-speed drift; drag unchanged */
+  if (dim === 0){
+    const y = h*0.55;
+    const isTau = FC === "\u03C4";
+    /* CURVATURE IS EMERGENT: dt/dtau = 2pi is the balance of the two times. At the
+       2pi-normalized baseline the worldline is straight; any gamma off baseline bends
+       it (above bows up, below bows down). Animations only — no labels. */
+    const bow = (FRAME.g - 1) * 150;
+    const lineY = (uu) => y - bow * 4 * uu * (1 - uu); /* quadratic worldline */
+    ctx.strokeStyle = isTau ? AMBER : CYAN; ctx.lineWidth = 1.6;
+    ctx.beginPath();
+    for (let q = 0; q <= 40; q++){ const uu = q/40, xq = w*0.12 + w*0.76*uu;
+      q === 0 ? ctx.moveTo(xq, lineY(uu)) : ctx.lineTo(xq, lineY(uu)); }
+    ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(w*0.88, y); ctx.lineTo(w*0.865, y-6); ctx.moveTo(w*0.88, y); ctx.lineTo(w*0.865, y+6); ctx.stroke();
+    ctx.strokeStyle = "rgba(237,232,220,.25)";
+    for (let i = 1; i < 10; i++){ const x = w*0.12 + (w*0.76)*i/10, yq = lineY(i/10);
+      ctx.beginPath(); ctx.moveTo(x, yq-5); ctx.lineTo(x, yq+5); ctx.stroke(); }
+    /* each frame in isolation runs identically; only comparison reveals the strain,
+       and comparison lives in the B_T overlay below */
+    const u = reduced ? 0.62 : (t*0.13) % 1;
+    const px = w*0.12 + w*0.76*u, py0 = lineY(u);
+    const gc = isTau ? "245,168,60" : "89,214,201";
+    const rg = ctx.createRadialGradient(px, py0, 0, px, py0, 26);
+    rg.addColorStop(0, `rgba(${gc},.85)`); rg.addColorStop(1, `rgba(${gc},0)`);
+    ctx.fillStyle = rg; ctx.beginPath(); ctx.arc(px, py0, 26, 0, 7); ctx.fill();
+    ctx.fillStyle = IVORY; ctx.beginPath(); ctx.arc(px, py0, 3.4, 0, 7); ctx.fill();
+    ctx.fillStyle = F_COL; ctx.font = "italic 22px 'STIX Two Text', serif";
+    const gx = w*0.895;
+    ctx.fillText(isTau ? "\u03C4" : "t", gx, y+7);
+    ctx.strokeStyle = F_COL.replace(",1)", ",.5)"); ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(gx - 2, y + 13); ctx.lineTo(gx + 14, y + 13); ctx.stroke();
+    ladHit0 = { w, h, main: [gx - 12, y - 20, 40, 44] };
+  } else if (dim === 1){
+    ctx.save(); ctx.translate(0, -40); /* the surface rides above the overlay */
+    const N = 21, S = Math.min(w, h) * 0.031;
+    const pts = [];
+    for (let i = 0; i <= N; i++){
+      pts[i] = [];
+      for (let j = 0; j <= N; j++){
+        const x = (i - N/2) * S, z = (j - N/2) * S;
+        const r = Math.hypot(i - N/2, j - N/2) / (N/2);
+        /* the surface is the selected area product: pure squares peak on their own axis,
+           mixed products shear across the diagonal (order sets the shear sign),
+           B_T^2 breathes with the beat envelope */
+        let amp = 62 + 12*Math.sin(t*1.4), rip = Math.sin(i*0.9 + t)*Math.cos(j*0.9 - t*0.8)*4;
+        /* a square is the same axis against itself: symmetric, uniform. Only coupling
+           (mixed or beat-laced) is allowed to break the symmetry. */
+        if (FC === "t\u00B7\u03C4") rip = Math.sin((i + j)*0.62 + t)*5;
+        else if (FC === "\u03C4\u00B7t") rip = Math.sin((i - j)*0.62 - t)*5;
+        else if (FC === "B_T\u00B7t"){ amp *= Math.abs(Math.sin(t*0.9))*0.8 + 0.2; rip = Math.sin(j*0.9 + t)*4; }
+        else if (FC === "B_T\u00B7\u03C4"){ amp *= Math.abs(Math.sin(t*0.9))*0.8 + 0.2; rip = Math.sin(i*0.9 - t)*4; }
+        else if (FC === "B_T\u00B2") amp *= Math.abs(Math.sin(t*0.9))*0.85 + 0.15;
+        const y = Math.exp(-r*r*3.4) * amp + rip;
+        pts[i][j] = proj(x, y, z, w, h, rot);
+      }
+    }
+    for (let i = 0; i <= N; i++){
+      for (const dir of [0, 1]){
+        ctx.beginPath();
+        for (let j = 0; j <= N; j++){
+          const p = dir ? pts[j][i] : pts[i][j];
+          j === 0 ? ctx.moveTo(p[0], p[1]) : ctx.lineTo(p[0], p[1]);
+        }
+        /* grading is per PRODUCT, not per first character: squares grade in their own
+           color, mixed products blend both (order reverses the blend), beat-laced
+           products blend gold with their partner, the beat plane grades pure gold */
+        const gA = .3 + .35*i/N, mixv = i/N;
+        const lerpC = (c1, c2, v, al) => {
+          const q = (k2) => Math.round(c1[k2] + (c2[k2]-c1[k2])*v);
+          return `rgba(${q(0)},${q(1)},${q(2)},${al})`;
+        };
+        const TE = [89,214,201], AM = [245,168,60], GO = [231,196,107];
+        ctx.strokeStyle =
+          FC === "t\u00B2" ? `rgba(89,214,201,${gA})` :
+          FC === "\u03C4\u00B2" ? `rgba(245,168,60,${gA})` :
+          FC === "t\u00B7\u03C4" ? lerpC(TE, AM, mixv, .55) :
+          FC === "\u03C4\u00B7t" ? lerpC(AM, TE, mixv, .55) :
+          FC === "B_T\u00B7t" ? lerpC(GO, TE, mixv, .5) :
+          FC === "B_T\u00B7\u03C4" ? lerpC(GO, AM, mixv, .5) :
+          FC === "B_T\u00B2" ? `rgba(231,196,107,${gA})` :
+          duo(i/N, .5);
+        ctx.lineWidth = 1; ctx.stroke();
+      }
+    }
+    const apex = proj(0, 118, 0, w, h, rot), base = proj(0, 78, 0, w, h, rot);
+    ctx.strokeStyle = IVORY; ctx.lineWidth = 1.4;
+    ctx.beginPath(); ctx.moveTo(base[0], base[1]); ctx.lineTo(apex[0], apex[1]); ctx.stroke();
+    ctx.fillStyle = F_COL; ctx.font = "italic 20px 'STIX Two Text', serif";
+    ctx.fillText(FC.replace(/B_T/g, "B\u209C"), apex[0]+10, apex[1]+2);
+    /* the plane's two ground axes, per frame: a square is its axis against itself */
+    const AX = { "t\u00B2": ["t","t"], "\u03C4\u00B2": ["\u03C4","\u03C4"],
+      "t\u00B7\u03C4": ["t","\u03C4"], "\u03C4\u00B7t": ["\u03C4","t"],
+      "B_T\u00B7t": ["B\u209C","t"], "B_T\u00B7\u03C4": ["B\u209C","\u03C4"] };
+    const ax = AX[FC];
+    ctx.font = "11px 'IBM Plex Mono', monospace"; ctx.fillStyle = "rgba(237,232,220,.6)";
+    if (ax) ctx.fillText(ax[0] + " \u2191 \u00D7 " + ax[1] + " \u2192", apex[0]+10, apex[1]+22);
+    ctx.restore();
+  } else {
+    ctx.save(); ctx.translate(0, -26); /* the cube rides a little higher */
+    const R = Math.min(w, h) * 0.21, n = 4;
+    /* THE RADIAL FAN: the volume's coupling to the ground plane, scaled by Module I's
+       own strain gamma. At the 2pi-normalized baseline (gamma = 1) it is a calm unit fan;
+       raising gamma dilates it. Double-click the gamma slider to return to baseline. */
+    const gm3 = FRAME.g;
+    const c = proj(0, -R*1.05, 0, w, h, rot);
+    ctx.strokeStyle = "rgba(237,232,220,.16)"; ctx.lineWidth = 1;
+    for (let k = 0; k < 26; k++){
+      const a = k / 26 * 6.2832 + t*0.08;
+      const L = R * gm3 * (0.85 + 0.22*Math.sin(t*1.3 + k));
+      ctx.beginPath(); ctx.moveTo(c[0], c[1]);
+      ctx.lineTo(c[0] + Math.cos(a)*L, c[1] + Math.sin(a)*L*0.36); ctx.stroke();
+    }
+    ctx.font = "9.5px 'IBM Plex Mono', monospace"; ctx.fillStyle = "rgba(237,232,220,.4)";
+    ctx.fillText("T\u00B3 = three orthogonal T\u00B2 planes meeting at the node", c[0] - 118, c[1] + 34);
+    function edge(a, b, alpha, warm){
+      const p = proj(a[0], a[1], a[2], w, h, rot), q = proj(b[0], b[1], b[2], w, h, rot);
+      const wm = FK === "tau" ? !warm : warm; /* palette swap: identical pattern, swapped identity */
+      ctx.strokeStyle = FK === "beat" ? `rgba(231,196,107,${alpha})` :
+        (wm ? `rgba(245,168,60,${alpha})` : `rgba(89,214,201,${alpha})`);
+      ctx.beginPath(); ctx.moveTo(p[0], p[1]); ctx.lineTo(q[0], q[1]); ctx.stroke();
+    }
+    ctx.lineWidth = 1;
+    for (let i = 0; i <= n; i++){
+      const u = -R + 2*R*i/n;
+      for (let j = 0; j <= n; j++){
+        const v = -R + 2*R*j/n;
+        edge([u, v, -R], [u, v, R], .30, false);
+        edge([u, -R, v], [u, R, v], .30, (i+j)%2===0);
+        edge([-R, u, v], [R, u, v], .30, true);
+      }
+    }
+    ctx.lineWidth = 1.6;
+    const V = [[-R,-R,-R],[R,-R,-R],[R,R,-R],[-R,R,-R],[-R,-R,R],[R,-R,R],[R,R,R],[-R,R,R]];
+    const E = [[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]];
+    E.forEach(e => edge(V[e[0]], V[e[1]], .8, true));
+    /* ORTHOGONAL PLANING: T-cubed decomposes into three legs T1,T2,T3 (x,y,z).
+       From the selected product's node, three orthogonal T-squared planes span the
+       volume, each labeled by its leg pair — for t-cubed all three read t·t; mixed
+       and beat-laced products relabel the legs. The planes move like Module II's
+       mesh: waves radiating in-plane from the node, displacing along each normal. */
+    const LEGS = {
+      "t\u00B3": ["t","t","t"], "\u03C4\u00B3": ["\u03C4","\u03C4","\u03C4"],
+      "t\u00B2\u00B7\u03C4": ["t","t","\u03C4"], "\u03C4\u00B2\u00B7t": ["\u03C4","\u03C4","t"],
+      "B_T\u00B7t\u00B7\u03C4": ["B","t","\u03C4"], "B_T\u00B7t\u00B2": ["B","t","t"],
+      "B_T\u00B7\u03C4\u00B2": ["B","\u03C4","\u03C4"],
+      "B_T\u00B2\u00B7t": ["B","B","t"], "B_T\u00B2\u00B7\u03C4": ["B","B","\u03C4"]
+    };
+    const FP3 = {
+      "t\u00B3": [R,R,R], "\u03C4\u00B3": [-R,-R,-R],
+      "t\u00B2\u00B7\u03C4": [R*0.5,R*0.5,R*0.5], "\u03C4\u00B2\u00B7t": [-R*0.5,-R*0.5,-R*0.5],
+      "B_T\u00B7t\u00B7\u03C4": [0,0,0], "B_T\u00B7t\u00B2": [R*0.6,R*0.22,0],
+      "B_T\u00B7\u03C4\u00B2": [-R*0.6,-R*0.22,0],
+      "B_T\u00B2\u00B7t": [R*0.33,0,0], "B_T\u00B2\u00B7\u03C4": [-R*0.33,0,0]
+    };
+    const legs3 = LEGS[FC], fp3 = FP3[FC];
+    if (legs3 && fp3){
+      const LCOL = { "t": [89,214,201], "\u03C4": [245,168,60], "B": [231,196,107] };
+      const lg3 = (n2) => LCOL[legs3[n2]];
+      const M3g = 9, R0 = R*0.97;
+      const PLANES = [[0,1,2],[1,0,2],[2,0,1]]; /* [normal, spanA, spanB] */
+      PLANES.forEach(pl => {
+        const [na, ba, ca] = pl;
+        const inward = fp3[na] === 0 ? 1 : -Math.sign(fp3[na]);
+        for (let i = 0; i <= M3g; i++){
+          ctx.beginPath();
+          for (let j = 0; j <= M3g; j++){
+            const vb = -R0 + (2*R0)*i/M3g, vc = -R0 + (2*R0)*j/M3g;
+            const d3 = Math.hypot(vb - fp3[ba], vc - fp3[ca])/R;
+            const disp = Math.sin(d3*6.5 - t*2.3) * 10 * Math.exp(-d3*1.1) * FRAME.g;
+            const pos = [0,0,0];
+            pos[na] = fp3[na] + inward*Math.abs(disp)*0.4 + disp*0.6;
+            pos[ba] = vb; pos[ca] = vc;
+            const p3 = proj(pos[0], pos[1], pos[2], w, h, rot);
+            j === 0 ? ctx.moveTo(p3[0], p3[1]) : ctx.lineTo(p3[0], p3[1]);
+          }
+          const cA = lg3(ba), cB = lg3(ca), v3 = i/M3g;
+          const q3 = (k3) => Math.round(cA[k3] + (cB[k3]-cA[k3])*v3);
+          ctx.strokeStyle = `rgba(${q3(0)},${q3(1)},${q3(2)},${0.10 + 0.10*Math.abs(Math.sin(t*1.1 + na))})`;
+          ctx.lineWidth = 0.8; ctx.stroke();
+        }
+        /* the plane's basis, labeled at its far corner from the node */
+        const far = [0,0,0];
+        far[na] = fp3[na];
+        far[ba] = fp3[ba] > 0 ? -R0 : R0; far[ca] = fp3[ca] > 0 ? -R0 : R0;
+        const lp3 = proj(far[0], far[1], far[2], w, h, rot);
+        const nm3 = (g2) => g2 === "B" ? "B\u209C" : g2;
+        ctx.font = "9.5px 'IBM Plex Mono', monospace";
+        ctx.fillStyle = "rgba(237,232,220,.5)";
+        ctx.fillText(nm3(legs3[ba]) + "\u00B7" + nm3(legs3[ca]), lp3[0] + 4, lp3[1] - 3);
+      });
+    }
+    /* interior interference glow — a teaser of Module XIV */
+    const ni = 5;
+    for (let i = 1; i < ni; i++) for (let j = 1; j < ni; j++) for (let k = 1; k < ni; k++){
+      const T1 = -1 + 2*i/ni, T2 = -1 + 2*j/ni, T3 = -1 + 2*k/ni;
+      const v = Math.cos(2.4*T1 + t*0.8) * Math.cos(3.0*T2 - t*0.5) * Math.cos(1.8*T3 + t*0.6);
+      if (Math.abs(v) < 0.4) continue;
+      const p = proj(T1*R*0.9, T2*R*0.9, T3*R*0.9, w, h, rot);
+      ctx.fillStyle = duo((v+1)/2, Math.abs(v)*0.7);
+      ctx.beginPath(); ctx.arc(p[0], p[1], 1.4 + Math.abs(v)*2.2, 0, 7); ctx.fill();
+    }
+    /* where the selected volumetric product LIVES: pure cubes at opposite corners,
+       mixed volumes on the corner-to-corner axis (weighted toward the squared clock),
+       B_T products at the cube's heart where the two clocks interfere */
+    const FPOS = {
+      "t\u00B3": [R, R, R], "\u03C4\u00B3": [-R, -R, -R],
+      "t\u00B2\u00B7\u03C4": [R*0.5, R*0.5, R*0.5], "\u03C4\u00B2\u00B7t": [-R*0.5, -R*0.5, -R*0.5],
+      "B_T\u00B7t\u00B7\u03C4": [0, 0, 0], "B_T\u00B2\u00B7t": [R*0.33, 0, 0], "B_T\u00B2\u00B7\u03C4": [-R*0.33, 0, 0],
+      "B_T\u00B7t\u00B2": [R*0.6, R*0.22, 0], "B_T\u00B7\u03C4\u00B2": [-R*0.6, -R*0.22, 0]
+    };
+    const fp = FPOS[FC];
+    if (fp){
+      const mk = proj(fp[0], fp[1], fp[2], w, h, rot);
+      const pulse = 5 + 2.2*Math.sin(t*2.2);
+      const mg = ctx.createRadialGradient(mk[0], mk[1], 0, mk[0], mk[1], pulse*3.2);
+      mg.addColorStop(0, F_COL.replace(",1)", ",.85)")); mg.addColorStop(1, F_COL.replace(",1)", ",0)"));
+      ctx.fillStyle = mg; ctx.beginPath(); ctx.arc(mk[0], mk[1], pulse*3.2, 0, 7); ctx.fill();
+      ctx.fillStyle = IVORY; ctx.beginPath(); ctx.arc(mk[0], mk[1], 2.6, 0, 7); ctx.fill();
+      /* tether the marker to its label so what-is-what stays legible while rotating */
+      const lb = proj(0, R*1.55, 0, w, h, rot);
+      ctx.strokeStyle = F_COL.replace(",1)", ",.4)"); ctx.lineWidth = 1;
+      ctx.setLineDash([2,4]);
+      ctx.beginPath(); ctx.moveTo(mk[0], mk[1]); ctx.lineTo(lb[0], lb[1]); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = F_COL; ctx.font = "italic 18px 'STIX Two Text', serif";
+      ctx.fillText(FC.replace(/B_T/g, "B\u209C"), lb[0] + 8, lb[1] + 2);
+    }
+    ctx.restore();
+  }
+  /* --- the combination set of this order, as an inset --- */
+  const ibx = 16, iby = h - 132, ibw = 262, ibh = 112;
+  /* the overlay panel: rounded, softly graded, with the frame's accent as its spine */
+  const rr9 = 9;
+  ctx.beginPath();
+  ctx.moveTo(ibx + rr9, iby);
+  ctx.arcTo(ibx + ibw, iby, ibx + ibw, iby + ibh, rr9);
+  ctx.arcTo(ibx + ibw, iby + ibh, ibx, iby + ibh, rr9);
+  ctx.arcTo(ibx, iby + ibh, ibx, iby, rr9);
+  ctx.arcTo(ibx, iby, ibx + ibw, iby, rr9);
+  ctx.closePath();
+  const pg9 = ctx.createLinearGradient(ibx, iby, ibx, iby + ibh);
+  pg9.addColorStop(0, "rgba(10,16,28,.85)"); pg9.addColorStop(1, "rgba(7,11,20,.62)");
+  ctx.fillStyle = pg9; ctx.fill();
+  ctx.strokeStyle = "rgba(237,232,220,.14)"; ctx.lineWidth = 1; ctx.stroke();
+  ctx.strokeStyle = F_COL.replace(",1)", ",.55)"); ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(ibx, iby + rr9); ctx.lineTo(ibx, iby + ibh - rr9); ctx.stroke();
+  ctx.font = "9px 'Space Grotesk', sans-serif"; ctx.fillStyle = "rgba(237,232,220,.42)";
+  ctx.fillText(dim === 0 ? "C O M P A R I S O N" : dim === 1 ? "P R O D U C T S \u00B7 T\u00B2" : "P R O D U C T S \u00B7 T\u00B3",
+    ibx + 12, iby - 6);
+  ctx.font = "italic 13px 'STIX Two Text', serif";
+  if (dim === 0){
+    /* the two clocks, reference on top: clicking either label switches the frame,
+       and the roles exchange — B_T reads |other − reference| */
+    const isT0 = FC !== "\u03C4";
+    const y1 = iby + 34, y2 = iby + 78;
+    const rows = isT0
+      ? [{ g: "t", col: CYAN, ct: "89,214,201", u: (reduced ? 0.4 : t*0.24) % 1, y: y1 },
+         { g: "\u03C4", col: AMBER, ct: "245,168,60", u: (reduced ? 0.32 : t*0.24/1.28) % 1, y: y2 }]
+      : [{ g: "\u03C4", col: AMBER, ct: "245,168,60", u: (reduced ? 0.32 : t*0.24/1.28) % 1, y: y1 },
+         { g: "t", col: CYAN, ct: "89,214,201", u: (reduced ? 0.4 : t*0.24) % 1, y: y2 }];
+    ctx.fillStyle = "rgba(255,215,0,.10)";
+    ctx.fillRect(ibx + 46, y1, ibw - 70, y2 - y1);
+    rows.forEach((rw, ri) => {
+      ctx.strokeStyle = rw.col; ctx.lineWidth = ri === 0 ? 1.8 : 1.2;
+      ctx.beginPath(); ctx.moveTo(ibx + 46, rw.y); ctx.lineTo(ibx + ibw - 24, rw.y); ctx.stroke();
+      ctx.fillStyle = rw.col;
+      ctx.beginPath(); ctx.arc(ibx + 46 + rw.u*(ibw - 70), rw.y, 3.4, 0, 7); ctx.fill();
+      ctx.font = (ri === 0 ? "italic 15px" : "italic 13px") + " 'STIX Two Text', serif";
+      ctx.fillStyle = `rgba(${rw.ct},${ri === 0 ? 1 : .6})`;
+      ctx.fillText(rw.g, ibx + 24, rw.y + 4);
+      if (ri === 0){
+        ctx.strokeStyle = `rgba(${rw.ct},.5)`; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(ibx + 22, rw.y + 9); ctx.lineTo(ibx + 36, rw.y + 9); ctx.stroke();
+      }
+      const box = [ibx + 12, rw.y - 14, 32, 28];
+      if (rw.g === "t") ladHit0.t = box; else ladHit0.tau = box;
+    });
+    ctx.fillStyle = "rgba(255,215,0,.7)"; ctx.font = "10px 'IBM Plex Mono', monospace";
+    ctx.fillText(isT0 ? "B_T = |\u03C4 \u2212 t|" : "B_T = |t \u2212 \u03C4|", ibx + 92, (y1 + y2)/2 + 3);
+    ctx.fillStyle = "rgba(237,232,220,.5)"; ctx.font = "9px 'IBM Plex Mono', monospace";
+    ctx.fillText("identical in isolation \u2014 only comparison strains", ibx + 12, iby + ibh - 8);
+  } else if (dim === 1){
+    /* the t-tau plane split by the diagonal: click any product to make it the frame */
+    const px2 = ibx + 44, py2 = iby + ibh - 22, sq = 70;
+    ladHitN = { w, h };
+    ctx.strokeStyle = "rgba(237,232,220,.4)"; ctx.lineWidth = 1;
+    ctx.strokeRect(px2, py2 - sq, sq, sq);
+    ctx.setLineDash([3,3]);
+    ctx.beginPath(); ctx.moveTo(px2, py2); ctx.lineTo(px2 + sq, py2 - sq); ctx.stroke();
+    ctx.setLineDash([]);
+    const lb2 = (txt, cb, x2, y2b, base) => {
+      const on = cb === FC;
+      ctx.font = (on ? "italic 14px" : "italic 12px") + " 'STIX Two Text', serif";
+      ctx.fillStyle = on ? F_COL : base;
+      ctx.fillText(txt, x2, y2b);
+      const tw2 = ctx.measureText(txt).width;
+      if (on){ ctx.strokeStyle = F_COL; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(x2, y2b + 4); ctx.lineTo(x2 + tw2, y2b + 4); ctx.stroke(); }
+      ladHitN[cb] = [x2 - 5, y2b - 14, tw2 + 10, 24];
+    };
+    lb2("t\u00B2", "t\u00B2", px2 + sq + 8, py2 + 4, "rgba(89,214,201,.7)");
+    lb2("\u03C4\u00B2", "\u03C4\u00B2", px2 - 4, py2 - sq - 6, "rgba(245,168,60,.7)");
+    lb2("\u03C4\u00B7t", "\u03C4\u00B7t", px2 + 10, py2 - sq*0.24, "rgba(237,232,220,.6)");
+    lb2("t\u00B7\u03C4", "t\u00B7\u03C4", px2 + sq*0.5, py2 - sq*0.62, "rgba(237,232,220,.6)");
+    lb2("B\u209C\u00B7t", "B_T\u00B7t", px2 + sq + 8, py2 - sq*0.30, "rgba(231,196,107,.7)");
+    lb2("B\u209C\u00B7\u03C4", "B_T\u00B7\u03C4", px2 + sq + 8, py2 - sq*0.58, "rgba(231,196,107,.7)");
+    lb2("B\u209C\u00B2", "B_T\u00B2", px2 + sq + 8, py2 - sq*0.86, "rgba(231,196,107,.7)");
+    ctx.font = "9px 'IBM Plex Mono', monospace"; ctx.fillStyle = "rgba(237,232,220,.55)";
+    ctx.fillText("click to frame", ibx + 8, iby + 12);
+  } else {
+    /* all seven volumetric combinations; the active frame is lit, the rest wait */
+    let lx = ibx + 16, ly = iby + 30;
+    ladHitN = { w, h };
+    FRAME.COMBOS[2].forEach(cb => {
+      const on = cb === FC;
+      ctx.font = (on ? "italic 14px" : "italic 12.5px") + " 'STIX Two Text', serif";
+      const txt = cb.replace(/B_T/g, "B\u209C");
+      const tw = ctx.measureText(txt).width;
+      if (lx + tw > ibx + ibw - 14){ lx = ibx + 16; ly += 26; }
+      ctx.fillStyle = on ? F_COL : "rgba(237,232,220,.45)";
+      ctx.fillText(txt, lx, ly);
+      if (on){ ctx.strokeStyle = F_COL; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(lx, ly + 4); ctx.lineTo(lx + tw, ly + 4); ctx.stroke(); }
+      ladHitN[cb] = [lx - 4, ly - 15, tw + 10, 24];
+      lx += tw + 16;
+    });
+    ctx.font = "9.5px 'IBM Plex Mono', monospace"; ctx.fillStyle = "rgba(237,232,220,.55)";
+    ctx.fillText("click to frame \u00B7 marker = where the product lives", ibx + 16, iby + ibh - 14);
+  }
+});
+const LIVE = [];
+let liveTimer = null;
+function liveNow(){
+  LIVE.forEach(item => {
+    /* re-render only when the line changed: an unchanged KaTeX rebuild every heartbeat
+       snapped a sideways-scrolled row back to its start */
+    try { const tex = item.fn(); if (tex !== item.tex){ renderTex(item.d, tex); item.tex = tex; } item.d.dataset.err = ""; }
+    catch(e){ if (item.d.dataset.err !== "1"){ item.d.dataset.err = "1"; item.d.textContent = "\u2026"; item.tex = null; } }
+  });
+}
+function refreshLive(){
+  clearTimeout(liveTimer);
+  liveTimer = setTimeout(liveNow, 70);
+}
+setInterval(liveNow, 1200);
+document.addEventListener("input", refreshLive, {passive:true});
+document.addEventListener("click", e => {
+  if (e.target.closest(".seg, .chip, .dim-item, .m3-cell, .scale-cell, .btn")) refreshLive();
+}, {passive:true});
+refreshLive();
+
+})();
+</script>
+</body>
+</html>
